@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 export const UserInfo = () => {
   const address = useTonAddress();
-  const rawAddress = useTonAddress(false);
+
   const wallet = useTonWallet();
   const [balance, setBalance] = useState("0");
 
@@ -14,7 +14,6 @@ export const UserInfo = () => {
       );
       const data = await response.json();
 
-      console.log("data", data);
       if (data && data.result) {
         setBalance((Number(data.result.balance) / 1e9).toFixed(3));
       }
@@ -29,28 +28,32 @@ export const UserInfo = () => {
     }
   }, [address]);
 
+  const formatAddress = (address: string) => {
+    return `${address.slice(0, 6)}...${address.slice(-6)}`;
+  };
+
   return (
     <div className="mt-3">
       {address && (
         <div className="grid">
           <p className=" text-xl font-bold text-center">
-            User Address: {address}
+            User Address: {formatAddress(address)}
           </p>
-          <span>Raw address: {rawAddress}</span>
         </div>
       )}
 
       {wallet && (
         <div>
-          {/* <span>Connected wallet: {wallet.name}</span> */}
-          <span>Device: {wallet.device.appName}</span>
+          <p className="text-center">Device: {wallet.device.appName}</p>
         </div>
       )}
 
       <div className="mt-4">
         {address && (
           <div>
-            <p className="text-xl font-bold">Balance: {balance} TON</p>
+            <p className="text-xl text-center font-bold">
+              Balance: {balance} TON
+            </p>
           </div>
         )}
       </div>

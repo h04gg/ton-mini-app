@@ -1,14 +1,7 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+"use client";
+
+import { TonConnectUIProvider } from "@tonconnect/ui-react";
 import "./globals.css";
-import Script from "next/script";
-
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: 'Telegram Mini App',
-  description: 'A simple Telegram Mini App using Next.js 14'
-};
 
 export default function RootLayout({
   children,
@@ -18,9 +11,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
+        <title>TON Connect Demo</title>
       </head>
-      <body className={inter.className}>{children}</body>
+      <body>
+        <TonConnectUIProvider manifestUrl="https://rose-left-whippet-164.mypinata.cloud/ipfs/QmSZ7XzGwyH4kppSPBS6VkHWToyuWBKKtJccAWKhB1HuUb">
+          {children}
+        </TonConnectUIProvider>
+      </body>
     </html>
   );
 }

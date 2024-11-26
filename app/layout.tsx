@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import "./globals.css";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
+import "./globals.css";
 
 export default function RootLayout({
   children,
@@ -14,7 +14,7 @@ export default function RootLayout({
         <title>TON Connect Demo</title>
       </head>
       <body>
-        <TonConnectUIProvider manifestUrl="https://violet-traditional-rabbit-103.mypinata.cloud/ipfs/QmQJJAdZ2qSwdepvb5evJq7soEBueFenHLX3PoM6tiBffm">
+        <TonConnectUIProvider manifestUrl="https://rose-left-whippet-164.mypinata.cloud/ipfs/QmSZ7XzGwyH4kppSPBS6VkHWToyuWBKKtJccAWKhB1HuUb">
           {children}
         </TonConnectUIProvider>
       </body>

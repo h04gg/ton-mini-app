@@ -1,14 +1,17 @@
-'use client'
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { useTonConnectUI } from '@tonconnect/ui-react';
 import { Address } from "@ton/core";
+import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
+import { useCallback, useEffect, useState } from "react";
+import { UserInfo } from "./components/UserInfo/UserInfo";
 
 export default function Home() {
+  const address = useTonAddress();
+  console.log("address", address);
+
   const [tonConnectUI] = useTonConnectUI();
   const [tonWalletAddress, setTonWalletAddress] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
   const handleWalletConnection = useCallback((address: string) => {
     setTonWalletAddress(address);
     console.log("Wallet connected successfully!");
@@ -72,6 +75,8 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
       <h1 className="text-4xl font-bold mb-8">TON Connect Demo</h1>
+
+      <UserInfo />
       {tonWalletAddress ? (
         <div className="flex flex-col items-center">
           <p className="mb-4">Connected: {formatAddress(tonWalletAddress)}</p>

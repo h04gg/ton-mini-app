@@ -46,12 +46,18 @@ export default function Home() {
 
   const handleSendTransaction = async () => {
     try {
-      await tonConnectUI.sendTransaction(transaction);
-      const latestTransaction = await fetchTransactions(address!);
-      if (latestTransaction) {
-        setTransactionLink(
-          `https://testnet.tonviewer.com/transaction/${latestTransaction}`
-        );
+      const result = await tonConnectUI.sendTransaction(transaction);
+
+      if (result) {
+        console.log("Transaction sent successfully:", result);
+        const latestTransaction = await fetchTransactions(address!);
+        if (latestTransaction) {
+          setTransactionLink(
+            `https://testnet.tonviewer.com/transaction/${latestTransaction}`
+          );
+        }
+      } else {
+        console.error("Transaction response is empty or failed.");
       }
     } catch (error) {
       console.error("Transaction failed:", error);

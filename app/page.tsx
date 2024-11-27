@@ -17,6 +17,7 @@ export default function Home() {
   const [receiveAddress, setReceiveAddress] = useState("");
   const [amount, setAmount] = useState("");
   const [transactionLink, setTransactionLink] = useState<string | null>(null);
+  const [isFetchingTransaction, setIsFetchingTransaction] = useState(false);
 
   const transaction: SendTransactionRequest = {
     validUntil: Date.now() + 5 * 60 * 1000, // 5 minutes
@@ -34,8 +35,9 @@ export default function Home() {
         `https://testnet.tonapi.io/v2/blockchain/accounts/${address}`
       );
       const data = await response.json();
+
       if (data && data.last_transaction_hash) {
-        const latestTransaction = data.last_transaction_hash; // Latest transaction
+        const latestTransaction = data.last_transaction_hash;
         return latestTransaction;
       }
     } catch (error) {
@@ -46,25 +48,33 @@ export default function Home() {
 
   const handleSendTransaction = async () => {
     try {
+      setIsFetchingTransaction(true);
       const result = await tonConnectUI.sendTransaction(transaction);
 
       if (result) {
-        console.log("Transaction sent successfully:", result);
+        await delay(10000);
         const latestTransaction = await fetchTransactions(address!);
         if (latestTransaction) {
           setTransactionLink(
             `https://testnet.tonviewer.com/transaction/${latestTransaction}`
           );
         }
+        setAmount(``);
+        setReceiveAddress(``);
       } else {
         console.error("Transaction response is empty or failed.");
       }
     } catch (error) {
       console.error("Transaction failed:", error);
+    } finally {
+      setIsFetchingTransaction(false);
     }
   };
 
-  const isButtonDisabled = !receiveAddress || !amount || Number(amount) <= 0;
+  const isButtonDisabled =
+    !receiveAddress || !amount || Number(amount) <= 0 || isFetchingTransaction;
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleWalletConnection = useCallback((address: string) => {
     setTonWalletAddress(address);
@@ -168,7 +178,7 @@ export default function Home() {
               onClick={handleSendTransaction}
               disabled={isButtonDisabled}
             >
-              Send transaction
+              {isFetchingTransaction ? "Processing..." : "Send Transaction"}
             </button>
 
             {transactionLink && (
